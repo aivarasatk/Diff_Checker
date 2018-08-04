@@ -1,0 +1,9 @@
+(+)Klaidu spausdinima perklt i savo klase (Dabar sumaisyta checker su Output)
+(+)Spaudziant 'tikrinti' sukurti nauja faila, o ne i ta pati rasyti
+(+)Sukurti sertifikato atpazinima
+(-)Apjungti tos pacios eilutes kelias klaidas
+
+(-)Pabandyti perkoduotivisa faila{
+https://stackoverflow.com/questions/18226858/detect-text-file-encoding
+https://stackoverflow.com/questions/5630114/how-to-read-utf-8-text-from-file-using-qt
+}
