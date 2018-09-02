@@ -4,7 +4,7 @@ Program for comparing file differences and outputting a report.
 Compiled with Qt 5.10.0 MinGw 32bit
 # Description
 
-Required files:
+Required files(not present in the repository):
 
 -Eip Master file (which has all the products) (A)
 
