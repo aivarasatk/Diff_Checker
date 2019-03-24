@@ -1,4 +1,4 @@
-# Gen_File_Check
+# Diff_Checker
 Program for comparing file differences and outputting a report.
 
 Compiled with Qt 5.10.0 MinGw 32bit
