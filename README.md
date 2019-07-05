@@ -16,5 +16,4 @@ Main goal of the program is to check whether the subsets have correct data in th
  ![Start](screens/pradzia.png)
  ![Date Select](screens/date_select.png)
  ![Program result](screens/program_result.png)
- 
-[Demo report file](screens/demo_output.xlsx)
+
