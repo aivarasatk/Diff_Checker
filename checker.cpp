@@ -24,22 +24,25 @@ void Checker::compareDocuments(Data data){
     int docIndex = 0;
     int childItemCount = 0;
 
+
     for(uint j = 0; j< parentData.size(); ++j){//eisim per visus produktus
         docIndex = 0;
         childItemCount = 0;
-        std::vector<int> mismatchFields;
 
         std::vector<QString> certificateKeys = getCertificateKeyValues(parentData[j][(int)I07::CERTIFICATEKEY]);
         std::vector<QString> foundValues;
         if(!certificateKeys.empty()){
-            for(uint i = 0; i < childData.size(); ++i){//sukamas ciklas pro visus dukterinius duomenis
+            for(uint i = 0; i < childData.size(); ++i)//sukamas ciklas pro visus dukterinius duomenis
+            {
+                std::vector<int> mismatchFields;
                 if(parentData[j][ (int)I07::UNIQUELINENUMBER ] == childData[i][ (int)I07::UNIQUENUMBERPAP ])//jei sutampa
                 {
                     itemChecked(isItemInChildVectorCheked, i, childCheckedItemCount);
                     itemChecked(isItemInParentVectorCheked, j, parentCheckedItemCount);
 
                     if(dateInInterval(parentData[j]) &&
-                       !checkCertificateKey(docNames[docIndex], certificateKeys, foundValues)){
+                       !checkCertificateKey(docNames[docIndex], certificateKeys, foundValues))
+                    {
                         if(foundValues.end() == (std::find(foundValues.begin(), foundValues.end(), docNames[docIndex]))){
                             addMisplacedProductToList(parentData[j], childData[i],
                                                       docNames[docIndex],certificateKeys.size());
@@ -109,7 +112,37 @@ void Checker::compareDocuments(Data data){
         }
     }
 
+    checkForDuplicates(parentData, true);
+    checkForDuplicates(childData, false);
+}
 
+void Checker::checkForDuplicates(std::vector<std::vector<QString>> I07Data, bool isGenData){
+    int monthEndIndex = 7;
+    int truncateToEndNumber= 10;
+
+    std::vector<QString> addedDuplicates = std::vector<QString>();
+    for(auto entry : I07Data){
+        int duplicateCounter = 0;
+        for(auto possibleDuplicate : I07Data){
+            if(entry[(int)I07::CODE] == possibleDuplicate[(int)I07::CODE]
+               && entry[(int)I07::EXPIRATIONDATE].remove(monthEndIndex,truncateToEndNumber) == possibleDuplicate[(int)I07::EXPIRATIONDATE].remove(monthEndIndex,truncateToEndNumber)){
+                duplicateCounter++;
+            }
+        }
+
+        bool errorAdded = std::find(addedDuplicates.begin(), addedDuplicates.end(), entry[(int)I07::CODE]) != addedDuplicates.end();
+        bool isDuplicate = isGenData ? duplicateCounter > 1 : duplicateCounter > getCertificateKeyValues(entry[(int)I07::CERTIFICATEKEY]).size();
+        if(isDuplicate && !errorAdded){
+            ++errorCounter;
+
+            addedDuplicates.push_back(entry[(int)I07::CODE]);
+
+            if(isGenData)
+                addDuplicateInGen(entry);
+            else
+                addDuplicateInChildren(entry, "Patikrinti kuriame");
+        }
+    }
 }
 
 std::vector<QString> Checker::getCertificateKeyValues(QString keyList){
@@ -133,8 +166,10 @@ int Checker::compareLines(std::vector<QString> parentLine, std::vector<QString> 
 
     for(uint i = 0; i < parentLine.size(); ++i){//name indeksas = 1; praleidziam, koda, nes jau patikrinta
         if(i != (int)I07::UNIQUELINENUMBER && i !=(int)I07::UNIQUENUMBERPAP
-           && i != (int)I07::NAME && i != (int)I07::CERTIFICATEKEY){//visada skirsis sie laukai
-            if(parentLine[i] != childLine[i]){
+           && i != (int)I07::NAME && i != (int)I07::CERTIFICATEKEY)//visada skirsis sie laukai
+        {
+            if(parentLine[i] != childLine[i])
+            {
                 mismatchFields.push_back(i);
             }
         }
@@ -229,10 +264,22 @@ void Checker::addNotInGen(std::vector<QString>& item, QString docName){
     item.push_back(docName);
     errors.notInGenFile.push_back(item);
 }
+
+void Checker::addDuplicateInGen(std::vector<QString>& item){
+    item.push_back("");
+    errors.duplicatesInGenFile.push_back(item);
+}
+
 void Checker::addNotInChildren(std::vector<QString>& item){
     item.push_back("GEN");
     errors.notInChildFiles.push_back(item);
 }
+
+void Checker::addDuplicateInChildren(std::vector<QString>& item,  QString docName){
+    item.push_back(docName);
+    errors.duplicatesInChildFiles.push_back(item);
+}
+
 
 void Checker::addUncheckedCertificateKeysToErrorList(std::vector<QString> parentData,
                                                      std::vector<QString> certificateKeys){

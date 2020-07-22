@@ -26,8 +26,17 @@ void ErrorWriter::writeErrorsToFile(Errors &errors, std::vector<QString> headers
     if(errors.notInGenFile.size() != 0){
         writeMissingItems(errors.notInGenFile,"GEN FAILE NERASTA", headers.size()-1);
     }
+
     if(errors.notInChildFiles.size() != 0){
         writeMissingItems(errors.notInChildFiles,"DUKTERINIUOSE FAILUOSE NERASTA", headers.size()-1);
+    }
+
+    if(errors.duplicatesInGenFile.size() != 0){
+        writeDuplicateItems(errors.duplicatesInGenFile,"GEN FAILE RASTI DUBLIAI", headers.size()-1);
+    }
+
+    if(errors.duplicatesInChildFiles.size() != 0){
+        writeDuplicateItems(errors.duplicatesInChildFiles,"DUKTERINIUOSE FAILUOSE RASTI DUBLIAI", headers.size()-1);
     }
     fileWriter.saveFile();
 }
@@ -50,6 +59,15 @@ void ErrorWriter::writeMissingItems(std::vector<std::vector<QString>>& missingIt
         writeMissingItemError(item);
     }
 }
+
+void ErrorWriter::writeDuplicateItems(std::vector<std::vector<QString> > &duplicateItems, QString subHeaderText, int cellMergeSize){
+    fileWriter.setFileNameHeadlineCurrentRow(subHeaderText, cellMergeSize);//nustatom texta antrastes
+
+    for(auto item : duplicateItems){
+        writeMissingItemError(item);
+    }
+}
+
 void ErrorWriter::writeMissingItemError(std::vector<QString> item,QString headlineMessage){
     if(!headlineMessage.isEmpty()){
         item.push_back(headlineMessage);

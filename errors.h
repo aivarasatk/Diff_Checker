@@ -7,7 +7,10 @@
 
 struct Errors{
     std::vector<std::vector<QString>> notInGenFile;
+    std::vector<std::vector<QString>> duplicatesInGenFile;
+
     std::vector<std::vector<QString>> notInChildFiles;
+    std::vector<std::vector<QString>> duplicatesInChildFiles;
 
     std::vector<std::vector<QString>> foundErrorsParent;//same size
     std::vector<std::vector<QString>> foundErrorsChild;//same size

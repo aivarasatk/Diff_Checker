@@ -42,7 +42,9 @@ public:
     void addChildToList(std::vector<QString> childItem, QString& description);
     void addMismatchToList(std::vector<int>& mismatchFields);
     void addNotInGen(std::vector<QString>& item, QString docName);
+    void addDuplicateInGen(std::vector<QString>& item);
     void addNotInChildren(std::vector<QString>& item);
+    void addDuplicateInChildren(std::vector<QString>& item, QString docName);
 
     void addMisplacedProductToList(std::vector<QString> parentData, std::vector<QString> childData,
                                    QString docName, uint keyListSize);
@@ -61,8 +63,10 @@ private:
     std::map<QString,QString> fileIdentification;
 
     enum class I07 {UNIQUELINENUMBER = 0, CODE = 1, NAME = 2, CERTIFICATEKEY = 3,
-                    AMOUNT = 4, EXPIRATIONDATE = 5, UNIQUENUMBERPAP = 6};
+                    AMOUNT = 4, EXPIRATIONDATE = 5, UNIQUENUMBERPAP = 6, DIMDATE = 7};
     enum class Sertificate{UNIQUEID = 0, MONTH = 1, IDENTIFIERS = 2};
+
+    void checkForDuplicates(std::vector<std::vector<QString>> I07Data, bool isGenData);
 
 };
 

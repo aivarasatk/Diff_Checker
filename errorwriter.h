@@ -21,6 +21,7 @@ private:
     void writeCurrentProductErrors(std::vector<QString> &childDataItem, std::vector<int> &mismatchFields);
 
     void writeMissingItems(std::vector<std::vector<QString> > &missingItems, QString subHeaderText, int cellMergeSize);
+    void writeDuplicateItems(std::vector<std::vector<QString> > &duplicateItems, QString subHeaderText, int cellMergeSize);
     void writeMissingItemError(std::vector<QString> item, QString headlineMessage = "");
 };
 

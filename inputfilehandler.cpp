@@ -46,7 +46,6 @@ bool InputFileHandler::readHowManyLinesToSkip(QString fileName, Data *data){
                 realNumber = qNumber.toInt();
 
             }else if(qNumber[qNumber.length()-1] == 'n'){//indikatorius kad laukas bus data
-                //qDebug() << "L" << qNumber.length();
                 qNumber.remove(qNumber.length()-1,1);
                 realNumber = qNumber.toInt();
                 parseI07 = true;//isiminsim kad reikes versti i skaiciu
@@ -129,24 +128,11 @@ std::vector<QString> InputFileHandler::readBlock(std::vector<int>& skipData, std
             return extractedStrings;
         }
 
-        /*QTextCodec *codecFrom  = QTextCodec::codecForName("System");
-
-        QString string = codecFrom->toUnicode(QByteArray::fromStdString(someString));
-
-
-        //QString string = QString::fromStdString(someString);
-        QTextCodec *codecTo = QTextCodec::codecForName("Windows-1257");
-        QByteArray encodedStringRes = codecTo->fromUnicode(string);
-        qDebug() << encodedStringRes;
-
-
-        QString parsedLine = parseLine(QString::fromUtf8(encodedStringRes));*/
-
         QString parsedLine = parseLine(QString::fromStdString(someString));
         extractedStrings.push_back(parsedLine);
 
     }
-    //qDebug() << "\n";
+
     skipLines(skipData[skipData.size()-1], file);//skipinam iki bloko pabaigos
     return extractedStrings;
 }
